@@ -1,0 +1,23 @@
+#!/bin/bash
+
+. ~/.aws/.init_book_session
+
+PATH_LIBRARY=output/library
+
+aws s3 ls $S3_BOOK_LOCATION > ${PATH_LIBRARY}
+
+if [[ "$OSTYPE" == "linux-gnu" ]];then
+    sed -i 's/^ *PRE.*$//g' ${PATH_LIBRARY}                                               # remove dir lines at top
+    sed -i 's/.*\.gitignore.*$//g' ${PATH_LIBRARY}                                        # remove gitignore file
+    sed -i 's/.*\.DS_Store$//g' ${PATH_LIBRARY}                                           # remove gitignore file
+    sed -i 's/^[0-9]*-[0-9]*-[0-9]*\ [0-9]*:[0-9]*:[0-9]*\ *[0-9]*\ //g' ${PATH_LIBRARY}  # remove date and file size
+    sed -i '/^$/d' ${PATH_LIBRARY}                                                        # remove empty lines
+else
+    sed -i '' 's/^ *PRE.*$//g' ${PATH_LIBRARY}                                               # remove dir lines at top
+    sed -i '' 's/.*\.gitignore.*$//g' ${PATH_LIBRARY}                                        # remove gitignore file
+    sed -i '' 's/.*\.DS_Store$//g' ${PATH_LIBRARY}                                           # remove gitignore file
+    sed -i '' 's/^[0-9]*-[0-9]*-[0-9]*\ [0-9]*:[0-9]*:[0-9]*\ *[0-9]*\ //g' ${PATH_LIBRARY}  # remove date and file size
+    sed -i '' '/^$/d' ${PATH_LIBRARY}                                                        # remove empty lines
+fi
+  
+
