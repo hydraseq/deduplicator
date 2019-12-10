@@ -33,6 +33,7 @@ def create_nodes(path_content, ndic, back):
         words = str(row.content).split()
         ndic[idx] = Node([words], row.name)
         back.merge(ndic[idx])
+    df = df.drop('content', axis=1)
     return df
 
 def generate_keywords(df, ndic, back):
