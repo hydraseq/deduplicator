@@ -42,3 +42,6 @@ all: extract content keywords dupes seeit
 sanitize:
 	find . -name __pycache__ | xargs rm -rf || true
 
+
+duper:
+	ipython -i do/record_how_dupes_with_pandas.py  output/keywords_listing.csv
