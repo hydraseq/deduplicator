@@ -11,26 +11,26 @@ seeit:    output/seeit.csv
 output/extracted.txt:
 	@echo "Compare pdf list to txt list, and download and extract any pdfs, push content to s3"
 	do/update_library
-	python3 do/extract_text.py --source output/library
+	python do/extract_text.py --source output/library
 
 output/content.csv:
 	@echo "download s3 extracted content and pipe into content.csv:|id|name|content|"
 	time bash do/download_extracted_content.sh
-	python3 do/create_content_csv.py
+	python do/create_content_csv.py
 	wc -l output/content.csv
 
 output/keywords_listing.csv:
 	@echo "take content.csv and output keywords_listing.csv:|id|name|keywords|"
-	time python3 do/generate_keywords.py
+	time python do/generate_keywords.py
 
 output/dupes.txt: output/keywords_listing.csv
 	@echo  "dupes.txt:|n-number-dupes name-1 name-2 name-n| plus summary at bottom"
-	. env/bin/activate; python3 do/findupes_with_hydraseq.py output/keywords_listing.csv 20 > output/dupes.txt
+	. env/bin/activate; python do/findupes_with_hydraseq.py output/keywords_listing.csv 20 > output/dupes.txt
 	cat output/dupes.txt
 
 output/seeit.csv:  dupes
 	@echo  "reformat the keywords_listing.csv to put the X keywords first for viewing ease"
-	. env/bin/activate; python3 do/viewkeys.py output/keywords_listing.csv 100 > output/seeit.csv
+	. env/bin/activate; python do/viewkeys.py output/keywords_listing.csv 100 > output/seeit.csv
 	cat output/dupes.txt
 
 clean:
