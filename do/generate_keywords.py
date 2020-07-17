@@ -40,6 +40,10 @@ def generate_keywords(df, ndic, back):
     print(df.columns)
          
     df['keywords'] = df.apply(lambda row: " ".join(ndic[row['id']].create_profile(back, ratio=0.2)), axis=1)
+    df['top05'] = df['keywords'].apply(lambda x: " ".join(str(x).split()[:5]))
+    df['top10'] = df['keywords'].apply(lambda x: " ".join(str(x).split()[:10]))
+    df['top15'] = df['keywords'].apply(lambda x: " ".join(str(x).split()[:15]))
+    df['top20'] = df['keywords'].apply(lambda x: " ".join(str(x).split()[:20]))
     return df
 
 if __name__ == "__main__":

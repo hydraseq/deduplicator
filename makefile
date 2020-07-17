@@ -1,6 +1,7 @@
 default:
 	cat makefile
 
+update:   output/library
 extract:  output/extracted.txt
 content:  output/content.csv
 keywords: output/keywords_listing.csv
@@ -8,9 +9,12 @@ dupes:    output/dupes.txt
 seeit:    output/seeit.csv
 
 # DETAILS
+output/library:
+	@echo Update the libary from git to get latest list of books
+	do/update_library
+
 output/extracted.txt:
 	@echo "Compare pdf list to txt list, and download and extract any pdfs, push content to s3"
-	do/update_library
 	python do/extract_text.py --source output/library
 
 output/content.csv:
@@ -37,7 +41,7 @@ clean:
 	@echo "remove all output to force pipeline to run through"
 	rm output/*
 
-all: extract content keywords dupes seeit
+all: update extract content keywords dupes seeit
 
 sanitize:
 	find . -name __pycache__ | xargs rm -rf || true
