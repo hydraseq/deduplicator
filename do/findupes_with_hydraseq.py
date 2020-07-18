@@ -8,7 +8,7 @@ import sys
 import os
 import pryzm
 csv.field_size_limit(sys.maxsize)
-debug = False
+debug =True 
 def _debug(*wurdz):
     global debug
     if debug:
@@ -47,7 +47,7 @@ def find_duplicates(hydra):
         n_peers = {n_next for n_last in neuron.lasts for n_next in n_last.nexts}
         n_peers.remove(neuron)
         if len(n_peers) > 0:
-            _debug("    find_duplicates: we have n_peers to process! for {}".format(neuron.key))
+            _debug("    find_duplicates: we have {} n_peers to process! for {}".format(len(n_peers), neuron.key))
         for n_peer in n_peers:
             group.add(n_peer.key.replace('0_',''))
             if not n_peer.key.startswith('0_'):
@@ -56,7 +56,7 @@ def find_duplicates(hydra):
 
         if len(group) > 1: groups.append(group)
 
-    _debug("    find_duplcates returning {} groups".format(len(groups)))
+    _debug("    find_duplcates: returning {} groups".format(len(groups)))
     return groups
 
 if __name__ == "__main__":

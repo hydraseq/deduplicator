@@ -13,12 +13,14 @@ Output:
 """
 from theseus.node import Node
 import csv
+import re
 import sys
 import pandas as pd
 import pryzm as pz
 csv.field_size_limit(sys.maxsize)
 error = pz.Pryzm().red
 
+pattern = re.compile('[\W_]+')
 
 def create_nodes(path_content, ndic, back):
     """create all nodes, fill ndic with all line nodes and populate the back node"""
@@ -29,8 +31,10 @@ def create_nodes(path_content, ndic, back):
         error("Forwarded exception message: {}".format(e))
         sys.exit(1)
 
+    df.reset_index()
+    df.id = df.index
     for idx, row in enumerate(df.itertuples()):
-        words = str(row.content).split()
+        words = str(pattern.sub(' ', row.content)).lower().split()
         ndic[idx] = Node([words], row.name)
         back.merge(ndic[idx])
     df = df.drop('content', axis=1)
