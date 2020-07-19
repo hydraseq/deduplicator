@@ -22,8 +22,16 @@ error = pz.Pryzm().red
 
 pattern = re.compile('[\W_]+')
 
-def create_nodes(path_content, ndic, back):
+def create_nodes(path_content, ndic, back, ngrams=True):
     """create all nodes, fill ndic with all line nodes and populate the back node"""
+    def _get_ngrams(words):
+        def _ngrams(words, n):
+            nwds = len(words)
+            return ["|".join(words[idx-n:idx]) for idx in range(n, nwds+1)]
+        bigrams = _ngrams(words, 2)
+        trgrams = _ngrams(words, 3)
+        return words + bigrams + trgrams
+    # ==============================================
     try:
         df = pd.read_csv(path_content, encoding='ISO-8859-1')
     except Exception as e:
@@ -35,6 +43,8 @@ def create_nodes(path_content, ndic, back):
     df.id = df.index
     for idx, row in enumerate(df.itertuples()):
         words = str(pattern.sub(' ', row.content)).lower().split()
+        if ngrams:
+            words = _get_ngrams(words)
         ndic[idx] = Node([words], row.name)
         back.merge(ndic[idx])
     df = df.drop('content', axis=1)

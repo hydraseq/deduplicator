@@ -29,7 +29,7 @@ output/keywords_listing.csv:
 
 output/dupes.txt: output/keywords_listing.csv
 	@echo  "dupes.txt:|n-number-dupes name-1 name-2 name-n| plus summary at bottom"
-	. env/bin/activate; python do/findupes_with_hydraseq.py output/keywords_listing.csv 4 > output/dupes.txt
+	. env/bin/activate; python do/findupes_with_hydraseq.py output/keywords_listing.csv 10 > output/dupes.txt
 	cat output/dupes.txt
 
 output/seeit.csv:  dupes

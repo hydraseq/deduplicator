@@ -36,20 +36,21 @@ def find_duplicates(hydra):
     """Search the output layer of hydra and return connected output by last link"""
     def get_output_neurons(hydra):
         output_cols = [output_col for key, output_col in hydra.columns.items() if key.startswith('0_')]
-        return { neuron for output_col in output_cols for neuron in output_col }
+        return [ neuron for output_col in output_cols for neuron in output_col ]
 
     out_nrns = get_output_neurons(hydra)
+    print("TYPE OF out_nrns", type(out_nrns))
     _debug("    find_duplicates: found {} out_nrns".format(int(len(out_nrns))))
     groups = []
     while out_nrns:
         neuron = out_nrns.pop()
-        group = {neuron.key.replace('0_','')}
+        group = [neuron.key.replace('0_','')]
         n_peers = {n_next for n_last in neuron.lasts for n_next in n_last.nexts}
         n_peers.remove(neuron)
         if len(n_peers) > 0:
             _debug("    find_duplicates: we have {} n_peers to process! for {}".format(len(n_peers), neuron.key))
         for n_peer in n_peers:
-            group.add(n_peer.key.replace('0_',''))
+            group.append(n_peer.key.replace('0_',''))
             if not n_peer.key.startswith('0_'):
                 raise Exception("last key should start with 0_, got {} while on {}".format(n_peer.key, neuron.key))
             out_nrns.remove(n_peer)
